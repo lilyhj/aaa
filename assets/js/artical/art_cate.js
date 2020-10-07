@@ -10,14 +10,15 @@ $(function () {
       method: "GET",
       url: "/my/article/cates",
       success: function (res) {
+        console.log(res);
         var htmlStr = template("tpl-table", res);
         $("tbody").html(htmlStr);
       },
     });
   }
 
-  // 为添加类别按钮绑定点击事件
-  var indexAdd = null;
+  // 为添加 按钮绑定点击事件
+  var indexAdd = null; //先定义索引
   $("#btnAddCate").on("click", function () {
     indexAdd = layer.open({
       type: 1,
@@ -27,7 +28,7 @@ $(function () {
     });
   });
 
-  // 通过代理的形式，为 form-add 表单绑定 submit 事件
+  // 代理form-add表单提交事件
   $("body").on("submit", "#form-add", function (e) {
     e.preventDefault();
     $.ajax({
@@ -40,14 +41,13 @@ $(function () {
         }
         initArtCateList();
         layer.msg("新增分类成功！");
-        // 根据索引，关闭对应的弹出层
-        layer.close(indexAdd);
+        layer.close(indexAdd); //关闭弹出层
       },
     });
   });
 
-  // 通过代理的形式，为 btn-edit 按钮绑定点击事件
-  var indexEdit = null;
+  // 代理给btn-edit按钮绑定点击事件
+  var indexEdit = null;//定义编辑索引
   $("tbody").on("click", ".btn-edit", function () {
     // 弹出一个修改文章分类信息的层
     indexEdit = layer.open({
@@ -68,7 +68,7 @@ $(function () {
     });
   });
 
-  // 通过代理的形式，为修改分类的表单绑定 submit 事件
+  //代理的修改绑定事件
   $("body").on("submit", "#form-edit", function (e) {
     e.preventDefault();
     $.ajax({
@@ -77,16 +77,16 @@ $(function () {
       data: $(this).serialize(),
       success: function (res) {
         if (res.status !== 0) {
-          return layer.msg("更新分类数据失败！");
+          return layer.msg("更新数据失败");
         }
-        layer.msg("更新分类数据成功！");
+        layer.msg("更新数据成功！");
         layer.close(indexEdit);
         initArtCateList();
       },
     });
   });
 
-  // 通过代理的形式，为删除按钮绑定点击事件
+  // 代理，为删除按钮绑定点击事件
   $("tbody").on("click", ".btn-delete", function () {
     var id = $(this).attr("data-id");
     // 提示用户是否要删除
@@ -96,9 +96,9 @@ $(function () {
         url: "/my/article/deletecate/" + id,
         success: function (res) {
           if (res.status !== 0) {
-            return layer.msg("删除分类失败！");
+            return layer.msg("删除失败！");
           }
-          layer.msg("删除分类成功！");
+          layer.msg("删除成功！");
           layer.close(index);
           initArtCateList();
         },
